@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Cookies from 'js-cookie';
 import { Task } from '../types';
+import Popup from './popup';
 
 interface TaskFormProps {
   onAddTask: (task: Omit<Task, 'id' | 'completed'>) => void;
@@ -10,14 +12,49 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
+  const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const { t } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onAddTask({ title, description, priority });
-    setTitle('');
-    setDescription('');
-    setPriority('medium');
+
+    const priorityValue = priority === 'low' ? 1 : priority === 'medium' ? 2 : 3;
+
+    const authToken = Cookies.get('authToken');
+
+    if (!authToken) {
+      setPopupMessage('Authentication token is missing');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://to-do-app-ml.vercel.app/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          priority: priorityValue,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setPopupMessage(data.message || 'Task created successfully');
+        onAddTask({ title, description, priority });
+        setTitle('');
+        setDescription('');
+        setPriority('medium');
+      } else {
+        setPopupMessage('Failed to create task');
+      }
+    } catch {
+      setPopupMessage('An error occurred. Please try again.');
+    }
   };
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -41,71 +78,77 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
   const inputClass = "mt-1 block w-full rounded-md border-2 border-secondary-light shadow-sm focus:border-primary focus:ring-2 focus:ring-primary sm:text-sm bg-white dark:bg-gray-700 text-text-light dark:text-text-dark transition-all duration-200 ease-in-out";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 h-full flex flex-col">
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium text-primary-dark dark:text-primary-light">
-          {t('taskForm.title')}
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          className={inputClass}
-        />
-      </div>
-      <div>
-        <label htmlFor="description" className="block text-sm font-medium text-primary-dark dark:text-primary-light">
-          {t('taskForm.description')}
-        </label>
-        <textarea
-          id="description"
-          value={description}
-          onChange={handleDescriptionChange}
-          required
-          className={`${inputClass} h-32 resize-none`}
-        ></textarea>
-        <p className="text-xs text-gray-500 mt-1">
-          {description.length}/300 {t('taskForm.characters')}
-        </p>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-primary-dark dark:text-primary-light mb-2">
-          {t('taskForm.priority')}
-        </label>
-        <div className="flex justify-between space-x-2">
-          <button
-            type="button"
-            onClick={() => setPriority('low')}
-            className={priorityButtonClass('low')}
-          >
-            {t('taskForm.low')}
-          </button>
-          <button
-            type="button"
-            onClick={() => setPriority('medium')}
-            className={priorityButtonClass('medium')}
-          >
-            {t('taskForm.medium')}
-          </button>
-          <button
-            type="button"
-            onClick={() => setPriority('high')}
-            className={priorityButtonClass('high')}
-          >
-            {t('taskForm.high')}
-          </button>
+    <div>
+      <form onSubmit={handleSubmit} className="space-y-4 h-full flex flex-col">
+        <div>
+          <label htmlFor="title" className="block text-sm font-medium text-primary-dark dark:text-primary-light">
+            {t('taskForm.title')}
+          </label>
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            className={inputClass}
+          />
         </div>
-      </div>
-      <button
-        type="submit"
-        className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light dark:bg-primary-dark dark:hover:bg-primary mt-4"
-      >
-        {t('taskForm.add')}
-      </button>
-    </form>
+        <div>
+          <label htmlFor="description" className="block text-sm font-medium text-primary-dark dark:text-primary-light">
+            {t('taskForm.description')}
+          </label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={handleDescriptionChange}
+            required
+            className={`${inputClass} h-32 resize-none`}
+          ></textarea>
+          <p className="text-xs text-gray-500 mt-1">
+            {description.length}/300 {t('taskForm.characters')}
+          </p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-primary-dark dark:text-primary-light mb-2">
+            {t('taskForm.priority')}
+          </label>
+          <div className="flex justify-between space-x-2">
+            <button
+              type="button"
+              onClick={() => setPriority('low')}
+              className={priorityButtonClass('low')}
+            >
+              {t('taskForm.low')}
+            </button>
+            <button
+              type="button"
+              onClick={() => setPriority('medium')}
+              className={priorityButtonClass('medium')}
+            >
+              {t('taskForm.medium')}
+            </button>
+            <button
+              type="button"
+              onClick={() => setPriority('high')}
+              className={priorityButtonClass('high')}
+            >
+              {t('taskForm.high')}
+            </button>
+          </div>
+        </div>
+        <button
+          type="submit"
+          className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light dark:bg-primary-dark dark:hover:bg-primary mt-4"
+        >
+          {t('taskForm.add')}
+        </button>
+      </form>
+
+      {popupMessage && (
+        <Popup message={popupMessage} onClose={() => setPopupMessage(null)} />
+      )}
+    </div>
   );
-}
+};
 
 export default TaskForm;
