@@ -1,0 +1,50 @@
+{
+  "login": {
+    "title": "Login",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign In"
+  },
+  "app": {
+    "title": "Todo App",
+    "logout": "Logout",
+    "addTask": "Add new task",
+    "noTasks": "No pending tasks.",
+    "tasks": "Tasks"
+  },
+  "taskForm": {
+    "title": "Title",
+    "description": "Description",
+    "priority": "Priority",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "add": "Add task",
+    "characters": "characters"
+  },
+  "taskCard": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "markComplete": "Mark as complete",
+    "markIncomplete": "Mark as incomplete",
+    "save": "Save",
+    "reopenConfirmation": "Do you want to reopen this task?",
+    "reopenTask": "Reopen task"
+  },
+  "taskDetailPopup": {
+    "close": "Close",
+    "completed": "Completed",
+    "pending": "Pending",
+    "description": "Description"
+  },
+  "darkMode": {
+    "toggle": "Toggle dark mode"
+  },
+  "language": {
+    "toggle": "Switch to Spanish"
+  },
+  "confirmDialog": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  }
+}

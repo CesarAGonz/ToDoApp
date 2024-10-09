@@ -1,0 +1,50 @@
+{
+  "login": {
+    "title": "Iniciar sesión",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "submit": "Ingresar"
+  },
+  "app": {
+    "title": "Aplicación de Tareas",
+    "logout": "Cerrar sesión",
+    "addTask": "Agregar nueva tarea",
+    "noTasks": "No hay tareas pendientes.",
+    "tasks": "Tareas"
+  },
+  "taskForm": {
+    "title": "Título",
+    "description": "Descripción",
+    "priority": "Prioridad",
+    "low": "Baja",
+    "medium": "Media",
+    "high": "Alta",
+    "add": "Agregar tarea",
+    "characters": "caracteres"
+  },
+  "taskCard": {
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "markComplete": "Marcar como completada",
+    "markIncomplete": "Marcar como incompleta",
+    "save": "Guardar",
+    "reopenConfirmation": "¿Deseas reabrir esta tarea?",
+    "reopenTask": "Reabrir tarea"
+  },
+  "taskDetailPopup": {
+    "close": "Cerrar",
+    "completed": "Completada",
+    "pending": "Pendiente",
+    "description": "Descripción"
+  },
+  "darkMode": {
+    "toggle": "Cambiar modo oscuro"
+  },
+  "language": {
+    "toggle": "Cambiar a inglés"
+  },
+  "confirmDialog": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  }
+}
