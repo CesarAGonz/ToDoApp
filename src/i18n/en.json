@@ -21,7 +21,10 @@
     "medium": "Medium",
     "high": "High",
     "add": "Add task",
-    "characters": "characters"
+    "characters": "characters",
+    "taskCreated": "Task created successfully",
+    "taskCreateError": "Failed to create task",
+    "authError": "Authentication token is missing"
   },
   "taskCard": {
     "edit": "Edit",

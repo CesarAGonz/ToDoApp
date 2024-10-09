@@ -21,7 +21,10 @@
     "medium": "Media",
     "high": "Alta",
     "add": "Agregar tarea",
-    "characters": "caracteres"
+    "characters": "caracteres",
+    "taskCreated": "Tarea creada con éxito",
+    "taskCreateError": "No se pudo crear la tarea",
+    "authError": "Falta el token de autenticación"
   },
   "taskCard": {
     "edit": "Editar",

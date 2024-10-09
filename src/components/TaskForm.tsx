@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Cookies from 'js-cookie';
 import { Task } from '../types';
-import Popup from './popup';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface TaskFormProps {
   onAddTask: (task: Omit<Task, 'id' | 'completed'>) => void;
@@ -12,7 +13,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
-  const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +23,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
     const authToken = Cookies.get('authToken');
 
     if (!authToken) {
-      setPopupMessage('Authentication token is missing');
+      toast.error(t('taskForm.authError'));
       return;
     }
 
@@ -41,19 +41,19 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
         }),
       });
 
-      const data = await response.json();
+      await response.json();
 
       if (response.ok) {
-        setPopupMessage(data.message || 'Task created successfully');
+        toast.success(t('taskForm.taskCreated'));
         onAddTask({ title, description, priority });
         setTitle('');
         setDescription('');
         setPriority('medium');
       } else {
-        setPopupMessage('Failed to create task');
+        toast.error(t('taskForm.taskCreateError'));
       }
     } catch {
-      setPopupMessage('An error occurred. Please try again.');
+      toast.error(t('taskForm.taskCreateError'));
     }
   };
 
@@ -79,6 +79,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
 
   return (
     <div>
+      <ToastContainer />
       <form onSubmit={handleSubmit} className="space-y-4 h-full flex flex-col">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-primary-dark dark:text-primary-light">
@@ -143,10 +144,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
           {t('taskForm.add')}
         </button>
       </form>
-
-      {popupMessage && (
-        <Popup message={popupMessage} onClose={() => setPopupMessage(null)} />
-      )}
     </div>
   );
 };
