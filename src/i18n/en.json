@@ -3,7 +3,8 @@
     "title": "Login",
     "username": "Username",
     "password": "Password",
-    "submit": "Sign In"
+    "submit": "Sign In",
+    "error": "Invalid credentials"
   },
   "app": {
     "title": "Todo App",
@@ -44,6 +45,7 @@
     "toggle": "Switch to Spanish"
   },
   "confirmDialog": {
+    "title": "Confirmation",
     "cancel": "Cancel",
     "confirm": "Confirm"
   }

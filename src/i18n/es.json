@@ -3,7 +3,8 @@
     "title": "Iniciar sesión",
     "username": "Nombre de usuario",
     "password": "Contraseña",
-    "submit": "Ingresar"
+    "submit": "Ingresar",
+    "error": "Credenciales inválidas"
   },
   "app": {
     "title": "Aplicación de Tareas",
@@ -44,6 +45,7 @@
     "toggle": "Cambiar a inglés"
   },
   "confirmDialog": {
+    "title": "Confirmación",
     "cancel": "Cancelar",
     "confirm": "Confirmar"
   }
