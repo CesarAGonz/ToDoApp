@@ -5,12 +5,20 @@ import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import { Task, User } from './types';
 import { LogOut, Moon, Sun, Languages } from 'lucide-react';
+import Cookies from 'js-cookie';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [darkMode, setDarkMode] = useState(false);
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const token = Cookies.get('authToken');
+    if (token) {
+      setUser({ username: 'Authenticated User', password: '' });
+    }
+  }, []);
 
   useEffect(() => {
     if (darkMode) {
@@ -33,6 +41,7 @@ function App() {
   };
 
   const handleLogout = () => {
+    Cookies.remove('authToken');
     setUser(null);
     setTasks([]);
   };

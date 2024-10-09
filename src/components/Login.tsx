@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { User } from '../types';
+import Cookies from 'js-cookie';
 
 interface LoginProps {
   onLogin: (user: User) => void;
@@ -9,11 +10,37 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { t } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin({ username, password });
+    setError('');
+
+    if (!username || !password) {
+      setError(t('login.emptyCredentials'));
+      return;
+    }
+
+    try {
+      const response = await fetch('https://to-do-app-ml.vercel.app/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      Cookies.set('authToken', data.token, { expires: 1/24 });
+      onLogin({ username, password });
+    } catch {
+      setError(t('Invalid Credentials'));
+    }
   };
 
   return (
@@ -36,7 +63,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 name="username"
                 type="text"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-secondary-light placeholder-secondary text-text-light dark:text-text-dark rounded-t-md focus:outline-none focus:ring-primary-light focus:border-primary-light focus:z-10 sm:text-sm bg-white dark:bg-white"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-secondary-light placeholder-secondary text-text-light dark:text-text-dark rounded-t-md focus:outline-none focus:ring-primary-light focus:border-primary-light focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
                 placeholder={t('login.username')}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -51,13 +78,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 name="password"
                 type="password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-secondary-light placeholder-secondary text-text-light dark:text-text-dark rounded-b-md focus:outline-none focus:ring-primary-light focus:border-primary-light focus:z-10 sm:text-sm bg-white dark:bg-white"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-secondary-light placeholder-secondary text-text-light dark:text-text-dark rounded-b-md focus:outline-none focus:ring-primary-light focus:border-primary-light focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
                 placeholder={t('login.password')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
+
+          {error && (
+            <div className="text-red-500 text-sm text-center">
+              {error}
+            </div>
+          )}
 
           <div>
             <button
