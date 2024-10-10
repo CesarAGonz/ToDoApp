@@ -4,6 +4,7 @@ export interface Task {
   description: string;
   priority: 'low' | 'medium' | 'high';
   completed: boolean;
+  userId?: string;
 }
 
 export interface User {
