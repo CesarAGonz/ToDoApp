@@ -83,7 +83,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onEdit, onD
           </button>
         )}
         {isEditing ? (
-          <div className="space-y-2">
+          <div className="space-y-2"
+          onClick={(e) => e.stopPropagation()}> 
             <input
               type="text"
               value={editedTitle}
