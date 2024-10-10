@@ -3,18 +3,14 @@ import { useTranslation } from 'react-i18next';
 import TaskCard from './TaskCard';
 import { Task } from '../types';
 
-interface DecodedToken {
-  userId: string;
-  exp: number;
-}
-
 interface TaskListProps {
+  tasks: Task[];
   onToggleComplete: (id: string) => void;
   onEdit: (id: string, updatedTask: Partial<Task>) => void;
   onDelete: (id: string) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ onToggleComplete, onEdit, onDelete }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, onToggleComplete, onEdit, onDelete }) => {
   const { t } = useTranslation();
 
 
