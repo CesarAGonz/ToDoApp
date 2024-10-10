@@ -21,6 +21,22 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onEdit, onD
   const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
   const { t } = useTranslation();
 
+  const getPriorityLabel = (priority: 'low' | 'medium' | 'high' | 1 | 2 | 3) => {
+    if (typeof priority === 'number') {
+      switch (priority) {
+        case 1:
+          return 'low';
+        case 2:
+          return 'medium';
+        case 3:
+          return 'high';
+        default:
+          return 'low';
+      }
+    }
+    return priority;
+  };
+
   const handleEdit = () => {
     onEdit(task.id, { 
       title: editedTitle, 
@@ -31,14 +47,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onEdit, onD
   };
 
   const handleToggleComplete = () => {
-    if (task.completed) {
-      setIsDialogOpen(true);
-    } else {
-      onToggleComplete(task.id);
-    }
-  };
-
-  const handleConfirmReopen = () => {
     onToggleComplete(task.id);
     setIsDialogOpen(false);
   };
@@ -59,8 +67,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onEdit, onD
     <>
       <div
         className={`bg-white dark:bg-gray-700 shadow-md dark:shadow-lg rounded-lg p-4 mb-4 ${task.completed ? 'opacity-50' : ''} transition-colors duration-300 border-l-4 ${
-          task.priority === 'high' ? 'border-danger' :
-          task.priority === 'medium' ? 'border-primary-light' :
+          getPriorityLabel(task.priority) === 'high' ? 'border-danger' :
+          getPriorityLabel(task.priority) === 'medium' ? 'border-primary-light' :
           'border-success'
         } relative cursor-pointer`}
         onClick={handleCardClick}
@@ -107,8 +115,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onEdit, onD
           <>
             <div className="flex justify-between items-start">
               <h3 className={`text-lg font-semibold ${task.completed ? 'line-through' : ''} text-primary-dark dark:text-primary-light`}>{task.title}</h3>
-              <span className={`text-xs font-semibold px-2 py-1 rounded ${priorityColor[task.priority]}`}>
-                {t(`taskForm.${task.priority}`)}
+              <span className={`text-xs font-semibold px-2 py-1 rounded ${priorityColor[getPriorityLabel(task.priority)]}`}>
+                {t(`taskForm.${getPriorityLabel(task.priority)}`)}
               </span>
             </div>
             <p className="text-secondary dark:text-gray-300 mt-2 overflow-hidden text-ellipsis whitespace-nowrap">{task.description}</p>
@@ -145,7 +153,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onEdit, onD
       <ConfirmDialog
         isOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
-        onConfirm={handleConfirmReopen}
+        onConfirm={handleToggleComplete}
         message={t('taskCard.reopenConfirmation')}
       />
       {isDetailPopupOpen && (

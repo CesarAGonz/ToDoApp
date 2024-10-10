@@ -17,16 +17,16 @@
     "title": "Título",
     "description": "Descripción",
     "priority": "Prioridad",
-    "1": "Baja",
-    "2": "Media",
-    "3": "Alta",
+    "low": "Baja",
+    "medium": "Media",
+    "high": "Alta",
     "add": "Agregar tarea",
     "characters": "caracteres",
     "taskCreated": "Tarea creada con éxito",
     "taskCreateError": "No se pudo crear la tarea",
     "authError": "Falta el token de autenticación"
   },
-  "taskCard": {
+  "markIncomplete": {
     "edit": "Editar",
     "delete": "Eliminar",
     "markComplete": "Marcar como completada",

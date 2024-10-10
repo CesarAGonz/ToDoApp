@@ -76,8 +76,12 @@ const TaskList: React.FC<TaskListProps> = ({ onToggleComplete, onEdit, onDelete 
     }
 
     if (!a.completed && !b.completed) {
-      const priorityOrder = { high: 0, medium: 1, low: 2 };
-      return priorityOrder[a.priority] - priorityOrder[b.priority];
+      const priorityOrder: { [key: string]: number } = { high: 1, medium: 2, low: 3 };
+      
+      const priorityA = typeof a.priority === 'number' ? a.priority : priorityOrder[a.priority];
+      const priorityB = typeof b.priority === 'number' ? b.priority : priorityOrder[b.priority];
+
+      return priorityA - priorityB;
     }
 
     return 0;
